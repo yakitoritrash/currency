@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Currency Exchange
+        </title>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                document.querySelector('form').onsubmit = function() {
+                    const currency = document.querySelector("#currency").value.toUpperCase();
+
+                    fetch('https://api.currencyapi.com/v3/latest?apikey=cur_live_d9pedOhe19xgLAoqc92mxZGqPJ9Ex6W7Tk6rUZir')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Check if currency exists in response data
+                        if (data.data && data.data[currency]) {
+                            const rate = data.data[currency].value;
+                            document.querySelector("#result").innerHTML = `1 USD is equal to ${rate.toFixed(3)} ${currency}`;
+                        } else {
+                            document.querySelector("#result").innerHTML = 'Invalid currency.';
+                        }
+                    })
+                    .catch(error => {
+                        document.querySelector("#result").innerHTML = 'Error fetching data.';
+                    });
+
+                    // Prevent form from refreshing page
+                    return false;
+                };
+            });
+
+
+        </script>
+    </head>
+    <body>
+        <form>
+            <input id="currency" placeholder="Currency (e.g., EUR)" type="text">
+            <input type="submit">
+        </form>
+        <div id="result" style = "padding-top: 10px;"></div>
+    </body>
+</html>
